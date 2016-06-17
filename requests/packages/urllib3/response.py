@@ -123,6 +123,10 @@ class HTTPResponse(io.IOBase):
         if hasattr(body, 'read'):
             self._fp = body
 
+        if getattr(connection, 'sock', False) and\
+            getattr(connection.sock, 'getpeercert', False):
+            self.peer_cert = connection.sock.getpeercert(binary_form=True)
+
         # Are we using the chunked-style of transfer encoding?
         self.chunked = False
         self.chunk_left = None
